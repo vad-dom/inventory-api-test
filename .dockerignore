@@ -1,0 +1,29 @@
+# Git
+.git
+
+# IDE
+.idea
+.vscode
+
+# Dependencies
+src/vendor
+src/node_modules
+
+# Environment
+src/.env
+
+# SQLite
+src/database/database.sqlite
+
+# Storage
+src/public/storage
+
+# Laravel runtime files
+src/bootstrap/cache
+src/storage/framework/cache
+src/storage/framework/sessions
+src/storage/framework/views
+src/storage/logs
+
+# Logs
+*.log
