@@ -16,8 +16,8 @@ class ApiKeyMiddleware
         if (! hash_equals((string) config('api.key'), (string) $apiKey)) {
             return ApiResponse::error(
                 code: 'UNAUTHORIZED',
-                message: 'Invalid API key',
-                status: 401
+                message: 'Invalid API key.',
+                status: Response::HTTP_UNAUTHORIZED,
             );
         }
 
