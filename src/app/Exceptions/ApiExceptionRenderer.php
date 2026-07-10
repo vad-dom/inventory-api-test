@@ -6,7 +6,9 @@ use App\Http\Responses\ApiResponse;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class ApiExceptionRenderer
 {
@@ -18,29 +20,33 @@ class ApiExceptionRenderer
 
         $exceptions->shouldRenderJsonWhen($isApiRequest);
 
-        $exceptions->render(function (ValidationException $e, Request $request) use ($isApiRequest) {
+        $exceptions->render(function (Throwable $e, Request $request) use ($isApiRequest) {
             if (! $isApiRequest($request)) {
                 return null;
             }
 
-            return ApiResponse::error(
-                code: 'VALIDATION_ERROR',
-                message: 'Validation failed',
-                status: 422,
-                fields: $e->errors(),
-            );
-        });
+            return match (true) {
+                $e instanceof ValidationException => ApiResponse::error(
+                    code: 'VALIDATION_ERROR',
+                    message: 'Validation failed.',
+                    status: Response::HTTP_UNPROCESSABLE_ENTITY,
+                    fields: $e->errors(),
+                ),
 
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) use ($isApiRequest) {
-            if (! $isApiRequest($request)) {
-                return null;
-            }
+                $e instanceof NotFoundHttpException => ApiResponse::error(
+                    code: 'NOT_FOUND',
+                    message: 'Resource not found.',
+                    status: Response::HTTP_NOT_FOUND,
+                ),
 
-            return ApiResponse::error(
-                code: 'NOT_FOUND',
-                message: 'Resource not found',
-                status: 404,
-            );
+                $e instanceof ApiBusinessException => ApiResponse::error(
+                    code: $e->getErrorCode(),
+                    message: $e->getMessage(),
+                    status: $e->getStatus(),
+                ),
+
+                default => null,
+            };
         });
     }
 }

@@ -29,7 +29,7 @@ class StoreProductRequest extends FormRequest
                 'required',
                 'string',
                 'max:64',
-                Rule::unique(Product::class, 'sku')
+                Rule::unique(Product::class, 'sku'),
             ],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
