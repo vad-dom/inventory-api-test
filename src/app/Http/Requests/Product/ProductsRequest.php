@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Support\Pagination;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -25,7 +26,12 @@ class ProductsRequest extends FormRequest
     {
         return [
             'page' => ['sometimes', 'integer', 'min:1'],
-            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'per_page' => [
+                'sometimes',
+                'integer',
+                'min:'.Pagination::MIN_PER_PAGE,
+                'max:'.Pagination::MAX_PER_PAGE,
+            ],
             'search' => ['sometimes', 'string'],
             'is_active' => ['sometimes', 'boolean'],
             'sort' => [

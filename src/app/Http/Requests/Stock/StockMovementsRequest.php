@@ -5,6 +5,7 @@ namespace App\Http\Requests\Stock;
 use App\Models\Product;
 use App\Models\StockMovement;
 use App\Models\Warehouse;
+use App\Support\Pagination;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,12 @@ class StockMovementsRequest extends FormRequest
     {
         return [
             'page' => ['sometimes', 'integer', 'min:1'],
-            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'per_page' => [
+                'sometimes',
+                'integer',
+                'min:'.Pagination::MIN_PER_PAGE,
+                'max:'.Pagination::MAX_PER_PAGE,
+            ],
 
             'product_id' => [
                 'sometimes',
