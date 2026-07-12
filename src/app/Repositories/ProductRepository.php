@@ -15,7 +15,9 @@ class ProductRepository
 
     public function create(array $data): Product
     {
-        return Product::query()->create($data);
+        return Product::query()
+            ->create($data)
+            ->refresh();
     }
 
     public function update(Product $product, array $data): Product

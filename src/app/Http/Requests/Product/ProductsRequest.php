@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Http\Requests\FilterRequest;
 use App\Support\Pagination;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductsRequest extends FormRequest
+class ProductsRequest extends FilterRequest
 {
     /**
      * Determine if the user is authorized to make this request.

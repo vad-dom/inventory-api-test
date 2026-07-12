@@ -23,10 +23,7 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
 
-            'total_quantity' => $this->when(
-                isset($this->total_quantity),
-                $this->total_quantity,
-            ),
+            'total_quantity' => $this->whenHas('total_quantity'),
         ];
     }
 }
