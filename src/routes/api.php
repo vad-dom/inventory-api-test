@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
@@ -12,4 +13,11 @@ Route::prefix('v1')
         Route::put('products/{id}', [ProductController::class, 'update']);
         Route::patch('products/{id}/deactivate', [ProductController::class, 'deactivate']);
         Route::delete('products/{id}', [ProductController::class, 'destroy']);
+
+        Route::post('warehouses', [WarehouseController::class, 'store']);
+        Route::get('warehouses', [WarehouseController::class, 'index']);
+        Route::get('warehouses/{id}', [WarehouseController::class, 'show']);
+        Route::put('warehouses/{id}', [WarehouseController::class, 'update']);
+        Route::patch('warehouses/{id}/deactivate', [WarehouseController::class, 'deactivate']);
+        Route::delete('warehouses/{id}', [WarehouseController::class, 'destroy']);
     });
