@@ -32,7 +32,7 @@ class IncomeRequest extends FormRequest
                 Rule::exists(Product::class, 'id'),
             ],
 
-            'target_warehouse_id' => [
+            'warehouse_id' => [
                 'required',
                 'integer',
                 Rule::exists(Warehouse::class, 'id'),

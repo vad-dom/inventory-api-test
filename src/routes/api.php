@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\StockController;
 use App\Http\Controllers\Api\V1\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,8 @@ Route::prefix('v1')
         Route::put('warehouses/{id}', [WarehouseController::class, 'update']);
         Route::patch('warehouses/{id}/deactivate', [WarehouseController::class, 'deactivate']);
         Route::delete('warehouses/{id}', [WarehouseController::class, 'destroy']);
+
+        Route::post('stock/income', [StockController::class, 'income']);
+        Route::post('stock/write-off', [StockController::class, 'writeOff']);
+        Route::post('stock/transfer', [StockController::class, 'transfer']);
     });
