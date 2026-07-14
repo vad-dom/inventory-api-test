@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\StockBalance;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class StockBalanceRepository
@@ -68,5 +69,49 @@ class StockBalanceRepository
             ->decrement('quantity', $quantity);
 
         return $updatedRowCount === 1;
+    }
+
+    public function paginate(array $filters): LengthAwarePaginator
+    {
+        $sort = $filters['sort'] ?? null;
+        $direction = $filters['direction'] ?? null;
+        $isSortSet = $sort !== null && $direction !== null;
+
+        $perPage = $filters['per_page'] ?? null;
+
+        return StockBalance::query()
+            ->with(['product', 'warehouse'])
+            ->when(
+                isset($filters['product_id']),
+                fn ($query) => $query->where('product_id', $filters['product_id']),
+            )
+            ->when(
+                isset($filters['warehouse_id']),
+                fn ($query) => $query->where('warehouse_id', $filters['warehouse_id']),
+            )
+            ->when(
+                ($filters['only_positive'] ?? false) === true,
+                fn ($query) => $query->where('quantity', '>', 0),
+            )
+            ->when(
+                $isSortSet,
+                fn ($query) => $query->orderBy($sort, $direction),
+            )
+            ->paginate($perPage);
+    }
+
+    public function findOrZeroBalance(
+        int $productId,
+        int $warehouseId,
+    ): StockBalance {
+        return StockBalance::query()->firstOrNew(
+            [
+                'product_id' => $productId,
+                'warehouse_id' => $warehouseId,
+            ],
+            [
+                'quantity' => 0,
+            ],
+        );
     }
 }

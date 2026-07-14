@@ -24,6 +24,20 @@ class ProductResource extends JsonResource
             'updated_at' => $this->updated_at?->toISOString(),
 
             'total_quantity' => $this->whenHas('total_quantity'),
+
+            'stock_balances' => $this->whenLoaded(
+                'stockBalances',
+                fn () => $this->stockBalances->map(
+                    fn ($stockBalance) => [
+                        'warehouse' => [
+                            'id' => $stockBalance->warehouse->id,
+                            'code' => $stockBalance->warehouse->code,
+                            'name' => $stockBalance->warehouse->name,
+                        ],
+                        'quantity' => $stockBalance->quantity,
+                    ],
+                ),
+            ),
         ];
     }
 }

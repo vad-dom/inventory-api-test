@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests\Stock;
 
+use App\Http\Requests\FilterRequest;
 use App\Models\Product;
 use App\Models\Warehouse;
 use App\Support\Pagination;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StockBalancesRequest extends FormRequest
+class StockBalancesRequest extends FilterRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -50,7 +50,7 @@ class StockBalancesRequest extends FormRequest
             'only_positive' => ['sometimes', 'boolean'],
 
             'sort' => [
-                'sometimes',
+                'required_with:direction',
                 'string',
                 Rule::in([
                     'quantity',
@@ -60,7 +60,7 @@ class StockBalancesRequest extends FormRequest
             ],
 
             'direction' => [
-                'sometimes',
+                'required_with:sort',
                 'string',
                 Rule::in([
                     'asc',
@@ -68,5 +68,10 @@ class StockBalancesRequest extends FormRequest
                 ]),
             ],
         ];
+    }
+
+    protected function booleanFields(): array
+    {
+        return ['only_positive'];
     }
 }

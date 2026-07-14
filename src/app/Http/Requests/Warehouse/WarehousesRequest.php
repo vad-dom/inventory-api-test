@@ -35,4 +35,9 @@ class WarehousesRequest extends FilterRequest
             'is_active' => ['sometimes', 'boolean'],
         ];
     }
+
+    protected function booleanFields(): array
+    {
+        return ['is_active'];
+    }
 }

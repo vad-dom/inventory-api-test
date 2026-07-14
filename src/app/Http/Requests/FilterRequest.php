@@ -8,17 +8,29 @@ abstract class FilterRequest extends FormRequest
 {
     protected function prepareForValidation(): void
     {
-        if (! $this->has('is_active')) {
+        foreach ($this->booleanFields() as $field) {
+            $this->normalizeBoolean($field);
+        }
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    abstract protected function booleanFields(): array;
+
+    private function normalizeBoolean(string $field): void
+    {
+        if (! $this->has($field)) {
             return;
         }
 
-        $isActive = $this->input('is_active');
+        $value = $this->input($field);
 
         $this->merge([
-            'is_active' => match ($isActive) {
+            $field => match ($value) {
                 'true' => true,
                 'false' => false,
-                default => $isActive,
+                default => $value,
             },
         ]);
     }

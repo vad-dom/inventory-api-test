@@ -25,4 +25,7 @@ Route::prefix('v1')
         Route::post('stock/income', [StockController::class, 'income']);
         Route::post('stock/write-off', [StockController::class, 'writeOff']);
         Route::post('stock/transfer', [StockController::class, 'transfer']);
+
+        Route::get('stock/balances', [StockController::class, 'balances']);
+        Route::get('stock/balances/{product}/{warehouse}', [StockController::class, 'balance']);
     });

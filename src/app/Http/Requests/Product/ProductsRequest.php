@@ -52,4 +52,9 @@ class ProductsRequest extends FilterRequest
             ],
         ];
     }
+
+    protected function booleanFields(): array
+    {
+        return ['is_active'];
+    }
 }

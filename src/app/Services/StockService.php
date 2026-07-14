@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Exceptions\ApiBusinessException;
 use App\Models\Product;
+use App\Models\StockBalance;
 use App\Models\StockMovement;
 use App\Models\Warehouse;
 use App\Repositories\ProductRepository;
 use App\Repositories\StockBalanceRepository;
 use App\Repositories\StockMovementRepository;
 use App\Repositories\WarehouseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use LogicException;
 use Symfony\Component\HttpFoundation\Response;
@@ -146,6 +148,23 @@ readonly class StockService
                 'comment' => $data['comment'] ?? null,
             ]);
         }, 3);
+    }
+
+    public function paginateBalances(array $filters): LengthAwarePaginator
+    {
+        return $this->stockBalanceRepository->paginate($filters);
+    }
+
+    public function getBalance(
+        Product $product,
+        Warehouse $warehouse,
+    ): StockBalance {
+        $stockBalance = $this->stockBalanceRepository->findOrZeroBalance($product->id, $warehouse->id);
+
+        $stockBalance->setRelation('product', $product);
+        $stockBalance->setRelation('warehouse', $warehouse);
+
+        return $stockBalance;
     }
 
     private function getActiveProduct(int $id): Product
