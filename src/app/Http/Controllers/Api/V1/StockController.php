@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Stock\IncomeRequest;
 use App\Http\Requests\Stock\StockBalancesRequest;
+use App\Http\Requests\Stock\StockMovementsRequest;
 use App\Http\Requests\Stock\TransferRequest;
 use App\Http\Requests\Stock\WriteOffRequest;
 use App\Http\Resources\StockBalanceResource;
@@ -72,6 +73,20 @@ class StockController extends Controller
 
         return ApiResponse::success(
             data: StockBalanceResource::make($balance),
+        );
+    }
+
+    public function movements(StockMovementsRequest $request): JsonResponse
+    {
+        $movements = $this->stockService->paginateMovements($request->validated());
+
+        return ApiResponse::success(
+            data: StockMovementResource::collection($movements->items()),
+            meta: [
+                'page' => $movements->currentPage(),
+                'per_page' => $movements->perPage(),
+                'total' => $movements->total(),
+            ],
         );
     }
 }

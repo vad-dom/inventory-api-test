@@ -28,4 +28,5 @@ Route::prefix('v1')
 
         Route::get('stock/balances', [StockController::class, 'balances']);
         Route::get('stock/balances/{product}/{warehouse}', [StockController::class, 'balance']);
+        Route::get('stock/movements', [StockController::class, 'movements']);
     });

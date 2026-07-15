@@ -167,6 +167,11 @@ readonly class StockService
         return $stockBalance;
     }
 
+    public function paginateMovements(array $filters): LengthAwarePaginator
+    {
+        return $this->stockMovementRepository->paginate($filters);
+    }
+
     private function getActiveProduct(int $id): Product
     {
         $product = $this->productRepository->findByIdOrFail($id);

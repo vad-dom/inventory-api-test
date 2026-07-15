@@ -67,7 +67,7 @@ class StockMovementsRequest extends FormRequest
             ],
 
             'sort' => [
-                'sometimes',
+                'required_with:direction',
                 'string',
                 Rule::in([
                     'created_at',
@@ -77,7 +77,7 @@ class StockMovementsRequest extends FormRequest
             ],
 
             'direction' => [
-                'sometimes',
+                'required_with:sort',
                 'string',
                 Rule::in([
                     'asc',
