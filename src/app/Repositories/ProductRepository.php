@@ -39,23 +39,30 @@ class ProductRepository
 
     public function paginate(array $filters): LengthAwarePaginator
     {
+        $isActiveSet = array_key_exists('is_active', $filters);
+        $isActive = $filters['is_active'] ?? null;
+
+        $search = $filters['search'] ?? null;
+
         $sort = $filters['sort'] ?? self::DEFAULT_SORT;
         $direction = $filters['direction'] ?? self::DEFAULT_DIRECTION;
+
         $perPage = $filters['per_page'] ?? self::DEFAULT_PER_PAGE;
 
         return Product::query()
-            ->when(! empty($filters['search']), function ($query) use ($filters): void {
-                $search = $filters['search'];
-
-                $query->where(function ($query) use ($search): void {
-                    $query->where('sku', 'like', "%$search%")
+            ->when(
+                $search !== null && $search !== '',
+                fn ($query) => $query->where(
+                    fn ($query) => $query
+                        ->where('sku', 'like', "%$search%")
                         ->orWhere('name', 'like', "%$search%")
-                        ->orWhere('description', 'like', "%$search%");
-                });
-            })
-            ->when(array_key_exists('is_active', $filters), function ($query) use ($filters): void {
-                $query->where('is_active', $filters['is_active']);
-            })
+                        ->orWhere('description', 'like', "%$search%"),
+                ),
+            )
+            ->when(
+                $isActiveSet,
+                fn ($query) => $query->where('is_active', $isActive),
+            )
             ->orderBy($sort, $direction)
             ->paginate($perPage);
     }

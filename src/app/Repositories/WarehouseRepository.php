@@ -33,20 +33,26 @@ class WarehouseRepository
 
     public function paginate(array $filters): LengthAwarePaginator
     {
+        $isActiveSet = array_key_exists('is_active', $filters);
+        $isActive = $filters['is_active'] ?? null;
+
+        $search = $filters['search'] ?? null;
+
         $perPage = $filters['per_page'] ?? null;
 
         return Warehouse::query()
-            ->when(! empty($filters['search']), function ($query) use ($filters): void {
-                $search = $filters['search'];
-
-                $query->where(function ($query) use ($search): void {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('code', 'like', "%{$search}%");
-                });
-            })
-            ->when(array_key_exists('is_active', $filters), function ($query) use ($filters): void {
-                $query->where('is_active', $filters['is_active']);
-            })
+            ->when(
+                $search !== null && $search !== '',
+                fn ($query) => $query->where(
+                    fn ($query) => $query
+                        ->where('name', 'like', "%$search%")
+                        ->orWhere('code', 'like', "%$search%"),
+                ),
+            )
+            ->when(
+                $isActiveSet,
+                fn ($query) => $query->where('is_active', $isActive),
+            )
             ->paginate($perPage);
     }
 

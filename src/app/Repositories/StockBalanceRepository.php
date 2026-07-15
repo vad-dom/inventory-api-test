@@ -73,6 +73,11 @@ class StockBalanceRepository
 
     public function paginate(array $filters): LengthAwarePaginator
     {
+        $productId = $filters['product_id'] ?? null;
+        $warehouseId = $filters['warehouse_id'] ?? null;
+
+        $onlyPositive = $filters['only_positive'] ?? false;
+
         $sort = $filters['sort'] ?? null;
         $direction = $filters['direction'] ?? null;
         $isSortSet = $sort !== null && $direction !== null;
@@ -82,15 +87,15 @@ class StockBalanceRepository
         return StockBalance::query()
             ->with(['product', 'warehouse'])
             ->when(
-                isset($filters['product_id']),
-                fn ($query) => $query->where('product_id', $filters['product_id']),
+                $productId !== null,
+                fn ($query) => $query->where('product_id', $productId),
             )
             ->when(
-                isset($filters['warehouse_id']),
-                fn ($query) => $query->where('warehouse_id', $filters['warehouse_id']),
+                $warehouseId !== null,
+                fn ($query) => $query->where('warehouse_id', $warehouseId),
             )
             ->when(
-                ($filters['only_positive'] ?? false) === true,
+                $onlyPositive === true,
                 fn ($query) => $query->where('quantity', '>', 0),
             )
             ->when(
