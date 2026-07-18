@@ -95,9 +95,9 @@ class StatisticsRepository
         return array_map(
             static fn (object $row): array => [
                 'product_id' => (int) $row->product_id,
-                'product_sku' => $row->product_sku,
-                'product_name' => $row->product_name,
-                'quantity' => (int) $row->quantity,
+                'sku' => $row->product_sku,
+                'name' => $row->product_name,
+                'total_quantity' => (int) $row->quantity,
             ],
             $rows,
         );
