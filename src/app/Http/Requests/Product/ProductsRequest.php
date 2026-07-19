@@ -37,6 +37,7 @@ class ProductsRequest extends FilterRequest
             'sort' => [
                 'sometimes',
                 Rule::in([
+                    'id',
                     'sku',
                     'name',
                     'created_at',

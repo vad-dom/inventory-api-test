@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -33,6 +34,12 @@ class ApiExceptionRenderer
                     fields: $e->errors(),
                 ),
 
+                $e instanceof BadRequestHttpException => ApiResponse::error(
+                    code: 'BAD_REQUEST',
+                    message: 'Bad request.',
+                    status: Response::HTTP_BAD_REQUEST,
+                ),
+
                 $e instanceof NotFoundHttpException => ApiResponse::error(
                     code: 'NOT_FOUND',
                     message: 'Resource not found.',
@@ -45,7 +52,11 @@ class ApiExceptionRenderer
                     status: $e->getStatus(),
                 ),
 
-                default => null,
+                default => ApiResponse::error(
+                    code: 'INTERNAL_ERROR',
+                    message: 'Internal server error.',
+                    status: Response::HTTP_INTERNAL_SERVER_ERROR,
+                ),
             };
         });
     }
