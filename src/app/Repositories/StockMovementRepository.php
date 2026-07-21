@@ -35,9 +35,9 @@ class StockMovementRepository
 
         return StockMovement::query()
             ->with([
-                'product',
-                'sourceWarehouse',
-                'targetWarehouse',
+                'product:id,sku,name',
+                'sourceWarehouse:id,code,name',
+                'targetWarehouse:id,code,name',
             ])
             ->when(
                 $productId !== null,

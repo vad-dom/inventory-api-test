@@ -85,7 +85,16 @@ class StockBalanceRepository
         $perPage = $filters['per_page'] ?? null;
 
         return StockBalance::query()
-            ->with(['product', 'warehouse'])
+            ->select([
+                'id',
+                'product_id',
+                'warehouse_id',
+                'quantity',
+            ])
+            ->with([
+                'product:id,sku,name',
+                'warehouse:id,code,name',
+            ])
             ->when(
                 $productId !== null,
                 fn ($query) => $query->where('product_id', $productId),
