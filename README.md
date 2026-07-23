@@ -2,11 +2,9 @@
 
 REST API для складского учета.
 
----
-
 ## Текст задания
 
-См. файл [TASK.md](TASK.md).
+См. файл: [TASK.md](TASK.md).
 
 ---
 
@@ -52,7 +50,7 @@ REST API для складского учета.
 
 ## Используемые технологии и технические решения
 
-См. файл [TECHNICAL_NOTES.md](TECHNICAL_NOTES.md).
+См. файл: [TECHNICAL_NOTES.md](TECHNICAL_NOTES.md).
 
 ---
 
@@ -110,7 +108,7 @@ docker compose up -d --build
 - создастся `.env` из `.env.example`;
 - установятся зависимости Composer;
 - сгенерируется `APP_KEY`;
-- выполнятся миграций;
+- выполнятся миграции;
 - заполнятся тестовые данные (Seeders).
 
 После запуска API будет доступно по адресу:
@@ -143,7 +141,7 @@ docker compose exec php php artisan config:clear
 
 При первом запуске миграции выполняются автоматически.
 
-При необходимости выполнить их повторно:
+При необходимости выполнить их вручную:
 
 ```bash
 docker compose exec php php artisan migrate
