@@ -9,23 +9,27 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')
     ->middleware('api.key')
     ->group(function (): void {
-        Route::post('products', [ProductController::class, 'store']);
+        Route::middleware('validate.json')->group(function (): void {
+            Route::post('products', [ProductController::class, 'store']);
+            Route::put('products/{id}', [ProductController::class, 'update']);
+
+            Route::post('warehouses', [WarehouseController::class, 'store']);
+            Route::put('warehouses/{id}', [WarehouseController::class, 'update']);
+
+            Route::post('stock/income', [StockController::class, 'income']);
+            Route::post('stock/write-off', [StockController::class, 'writeOff']);
+            Route::post('stock/transfer', [StockController::class, 'transfer']);
+        });
+
         Route::get('products', [ProductController::class, 'index']);
         Route::get('products/{id}', [ProductController::class, 'show']);
-        Route::put('products/{id}', [ProductController::class, 'update']);
         Route::patch('products/{id}/deactivate', [ProductController::class, 'deactivate']);
         Route::delete('products/{id}', [ProductController::class, 'destroy']);
 
-        Route::post('warehouses', [WarehouseController::class, 'store']);
         Route::get('warehouses', [WarehouseController::class, 'index']);
         Route::get('warehouses/{id}', [WarehouseController::class, 'show']);
-        Route::put('warehouses/{id}', [WarehouseController::class, 'update']);
         Route::patch('warehouses/{id}/deactivate', [WarehouseController::class, 'deactivate']);
         Route::delete('warehouses/{id}', [WarehouseController::class, 'destroy']);
-
-        Route::post('stock/income', [StockController::class, 'income']);
-        Route::post('stock/write-off', [StockController::class, 'writeOff']);
-        Route::post('stock/transfer', [StockController::class, 'transfer']);
 
         Route::get('stock/balances', [StockController::class, 'balances']);
         Route::get('stock/balances/{product}/{warehouse}', [StockController::class, 'balance']);

@@ -2,6 +2,7 @@
 
 use App\Exceptions\ApiExceptionRenderer;
 use App\Http\Middleware\ApiKeyMiddleware;
+use App\Http\Middleware\ValidateJsonMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'api.key' => ApiKeyMiddleware::class,
+            'validate.json' => ValidateJsonMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

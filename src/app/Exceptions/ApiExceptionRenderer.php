@@ -36,7 +36,7 @@ class ApiExceptionRenderer
 
                 $e instanceof BadRequestHttpException => ApiResponse::error(
                     code: 'BAD_REQUEST',
-                    message: 'Bad request.',
+                    message: $e->getMessage() ?: 'Bad request.',
                     status: Response::HTTP_BAD_REQUEST,
                 ),
 
